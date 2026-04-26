@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistente de Pauta e Cobertura Jornalística</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; padding: 20px; line-height: 1.6; }
+        .container { max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; font-size: 24px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        label { font-weight: bold; display: block; margin-top: 20px; }
+        select, input, button { width: 100%; padding: 12px; margin-top: 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 16px; }
+        button { background-color: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; transition: background 0.3s; margin-top: 25px; }
+        button:hover { background-color: #2980b9; }
+        .result-box { margin-top: 30px; padding: 20px; background: #eef2f7; border-left: 5px solid #3498db; display: none; }
+        h3 { margin-top: 0; color: #2980b9; }
+        ul { padding-left: 20px; }
+        .footer { text-align: center; margin-top: 40px; font-size: 12px; color: #888; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📝 Gerador de Pauta e Checklist</h1>
+    
+    <label for="tipoEvento">Qual o tipo de cobertura?</label>
+    <select id="tipoEvento">
+        <option value="jogo">Cobertura de Jogo (Esportes)</option>
+        <option value="coletiva">Coletiva de Imprensa / Entrevista</option>
+        <option value="evento">Evento Institucional / Solenidade</option>
+    </select>
+
+    <label for="titulo">Título Provisório da Matéria:</label>
+    <input type="text" id="titulo" placeholder="Ex: Final do Campeonato de Areia">
+
+    <button onclick="gerarPauta()">Gerar Roteiro de Cobertura</button>
+
+    <div id="resultado" class="result-box">
+        <h3 id="res-titulo"></h3>
+        <p><strong>📍 Perguntas Essenciais (Lide):</strong></p>
+        <ul id="lista-perguntas"></ul>
+        <p><strong>🎒 Checklist de Equipamentos:</strong></p>
+        <ul id="lista-equipamentos"></ul>
+    </div>
+
+    <div class="footer">
+        Ferramenta Experimental IA - Disciplina de Jornalismo
+    </div>
+</div>
+
+<script>
+    function gerarPauta() {
+        const tipo = document.getElementById('tipoEvento').value;
+        const titulo = document.getElementById('titulo').value || "Pauta Sem Título";
+        const resultadoDiv = document.getElementById('resultado');
+        const listaPerguntas = document.getElementById('lista-perguntas');
+        const listaEquipamentos = document.getElementById('lista-equipamentos');
+        
+        document.getElementById('res-titulo').innerText = "Roteiro: " + titulo;
+        
+        let perguntas = [];
+        let equipamentos = ["Celular carregado", "Power bank (bateria extra)", "Bloco de notas e caneta"];
+
+        if (tipo === 'jogo') {
+            perguntas = ["Qual a importância deste resultado para a tabela?", "Quem foi o destaque da partida?", "Houve alguma polêmica ou lesão importante?", "Qual a estratégia para o próximo confronto?"];
+            equipamentos.push("Gravador de áudio", "Tripé de mão para celular", "Colete de imprensa");
+        } else if (tipo === 'coletiva') {
+            perguntas = ["Qual o anúncio principal feito hoje?", "Como isso impacta a comunidade/clube?", "Quais os prazos e valores envolvidos?", "Houve espaço para perguntas críticas?"];
+            equipamentos.push("Microfone de lapela", "Lista de autoridades presentes");
+        } else {
+            perguntas = ["Qual o objetivo do evento?", "Quem são as principais autoridades?", "Qual o público estimado?", "Houve algum fato fora do script?"];
+            equipamentos.push("Câmera fotográfica", "Cartão de memória reserva");
+        }
+
+        listaPerguntas.innerHTML = perguntas.map(p => `<li>${p}</li>`).join('');
+        listaEquipamentos.innerHTML = equipamentos.map(e => `<li>${e}</li>`).join('');
+        
+        resultadoDiv.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
