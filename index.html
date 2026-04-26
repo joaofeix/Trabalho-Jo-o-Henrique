@@ -5,79 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assistente de Pauta e Cobertura Jornalística</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; padding: 20px; line-height: 1.6; }
-        .container { max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; text-align: center; font-size: 24px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        label { font-weight: bold; display: block; margin-top: 20px; }
-        select, input, button { width: 100%; padding: 12px; margin-top: 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 16px; }
-        button { background-color: #3498db; color: white; border: none; cursor: pointer; font-weight: bold; transition: background 0.3s; margin-top: 25px; }
-        button:hover { background-color: #2980b9; }
-        .result-box { margin-top: 30px; padding: 20px; background: #eef2f7; border-left: 5px solid #3498db; display: none; }
-        h3 { margin-top: 0; color: #2980b9; }
-        ul { padding-left: 20px; }
-        .footer { text-align: center; margin-top: 40px; font-size: 12px; color: #888; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; color: #1c1e21; padding: 20px; line-height: 1.6; }
+        .container { max-width: 700px; margin: auto; background: #fff; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h1 { color: #1a73e8; text-align: center; font-size: 28px; margin-bottom: 25px; }
+        label { font-weight: 600; display: block; margin-top: 20px; color: #444; }
+        select, input, button { width: 100%; padding: 14px; margin-top: 10px; border-radius: 8px; border: 2px solid #e1e4e8; font-size: 16px; outline: none; box-sizing: border-box; }
+        input:focus, select:focus { border-color: #1a73e8; }
+        button { background-color: #1a73e8; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 30px; transition: all 0.2s ease; }
+        button:hover { background-color: #1557b0; transform: translateY(-2px); }
+        .result-box { margin-top: 30px; padding: 25px; background: #f8f9fa; border-top: 6px solid #1a73e8; border-radius: 8px; display: none; }
+        h3 { margin-top: 0; color: #1a73e8; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .section-title { font-weight: bold; color: #2c3e50; margin-top: 15px; display: flex; align-items: center; }
+        .section-title i { margin-right: 10px; }
+        ul { padding-left: 20px; margin-top: 5px; }
+        li { margin-bottom: 8px; }
+        .footer { text-align: center; margin-top: 50px; font-size: 13px; color: #777; border-top: 1px solid #eee; padding-top: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>📝 Gerador de Pauta e Checklist</h1>
+    <h1>📝 Assistente de Pauta IA</h1>
     
-    <label for="tipoEvento">Qual o tipo de cobertura?</label>
+    <label for="tipoEvento">Selecione a Editoria/Tipo de Cobertura:</label>
     <select id="tipoEvento">
-        <option value="jogo">Cobertura de Jogo (Esportes)</option>
-        <option value="coletiva">Coletiva de Imprensa / Entrevista</option>
-        <option value="evento">Evento Institucional / Solenidade</option>
+        <option value="jogo">🏆 Cobertura Esportiva (FME/Grêmio)</option>
+        <option value="coletiva">🎤 Coletiva de Imprensa / Entrevista</option>
+        <option value="evento">🏢 Evento Institucional / Geral</option>
+        <option value="investigativa">🔍 Reportagem de Fôlego / Investigativa</option>
     </select>
 
-    <label for="titulo">Título Provisório da Matéria:</label>
-    <input type="text" id="titulo" placeholder="Ex: Final do Campeonato de Areia">
+    <label for="titulo">Assunto ou Título Provisório:</label>
+    <input type="text" id="titulo" placeholder="Ex: Patinetes em BC ou Jogo do Grêmio">
 
-    <button onclick="gerarPauta()">Gerar Roteiro de Cobertura</button>
+    <button onclick="gerarPauta()">Gerar Estrutura de Pauta Dinâmica</button>
 
     <div id="resultado" class="result-box">
         <h3 id="res-titulo"></h3>
-        <p><strong>📍 Perguntas Essenciais (Lide):</strong></p>
+        
+        <div class="section-title">📍 Sugestões de Perguntas (Lide & Detalhes):</div>
         <ul id="lista-perguntas"></ul>
-        <p><strong>🎒 Checklist de Equipamentos:</strong></p>
+        
+        <div class="section-title">🎒 Checklist de Equipamentos Recomendado:</div>
         <ul id="lista-equipamentos"></ul>
+        
+        <div class="section-title">💡 Dica da IA para esta Cobertura:</div>
+        <p id="dica-ia" style="font-style: italic; color: #555;"></p>
     </div>
 
     <div class="footer">
-        Ferramenta Experimental IA - Disciplina de Jornalismo
+        Desenvolvido por João Henrique | Disciplina de Jornalismo - Univali 2026
     </div>
 </div>
 
 <script>
+    const bancoDados = {
+        jogo: {
+            perguntas: [
+                "Como o estado do gramado/quadra influenciou o desempenho?",
+                "Qual a análise técnica sobre as substituições feitas no 2º tempo?",
+                "Como a torcida está reagindo ao desempenho recente do time?",
+                "Houve algum lance polêmico que mudou o ritmo da partida?",
+                "Qual a projeção matemática para a próxima rodada?",
+                "Quais atletas serão poupados para o próximo compromisso?",
+                "Houve alguma declaração 'quente' na saída de campo?",
+                "Como a parte física pesou nos minutos finais?"
+            ],
+            equipamentos: ["Gravador", "Tripé de mão", "Colete de imprensa", "Caderno de súmula", "Uniforme da equipe de comunicação"],
+            dica: "Foque nos bastidores. Fotos da torcida e vídeos curtos para Reels costumam engajar mais que apenas o placar."
+        },
+        coletiva: {
+            perguntas: [
+                "Quais são os prazos reais para a entrega deste projeto?",
+                "De onde virão os recursos financeiros citados?",
+                "Como essa decisão afeta o cidadão comum de Balneário Camboriú?",
+                "Existem pontos críticos que foram omitidos no anúncio oficial?",
+                "Quem são os parceiros ou empresas envolvidas nesta ação?",
+                "Haverá algum canal de transparência para o acompanhamento público?",
+                "O que motivou essa mudança de postura da instituição agora?",
+                "Qual o plano de contingência caso os prazos não sejam cumpridos?"
+            ],
+            equipamentos: ["Microfone de lapela", "Adaptador P2/P10", "Lista de autoridades", "Identidade funcional (Crachá)"],
+            dica: "Tente fazer a 'pergunta que ninguém quer fazer'. O lide muitas vezes está na resposta mais curta do entrevistado."
+        },
+        evento: {
+            perguntas: [
+                "Qual a expectativa de público para este evento?",
+                "Qual o impacto econômico local esperado?",
+                "Houve algum imprevisto na organização?",
+                "Quem são as figuras ilustres presentes?",
+                "Qual a mensagem principal que a organização quer passar?",
+                "Como o evento se diferencia das edições anteriores?",
+                "Haverá impacto no trânsito ou rotina da cidade?",
+                "Qual o momento mais aguardado da programação?"
+            ],
+            equipamentos: ["Câmera com cartão limpo", "Lente clara (para ambientes fechados)", "Power bank", "Roteiro da cerimônia"],
+            dica: "Capture 'personagens'. Uma aspa de um morador local impactado vale mais que 10 aspas de autoridades."
+        },
+        investigativa: {
+            perguntas: [
+                "O que dizem os documentos oficiais comparados aos depoimentos?",
+                "Existem padrões de comportamento que se repetem?",
+                "Quem são os maiores beneficiados por esta situação?",
+                "Qual o histórico dos envolvidos nos últimos 5 anos?",
+                "Há contradições entre as falas anteriores e atuais?",
+                "O que os dados estatísticos revelam sobre este problema?"
+            ],
+            equipamentos: ["Scanner de mão/app de documentos", "Câmera discreta", "Backup em nuvem imediato", "Contatos de fontes sigilosas"],
+            dica: "Segurança em primeiro lugar. Mantenha sempre alguém da redação ciente da sua localização."
+        }
+    };
+
+    function sortear(array, quantidade) {
+        return array.sort(() => 0.5 - Math.random()).slice(0, quantidade);
+    }
+
     function gerarPauta() {
         const tipo = document.getElementById('tipoEvento').value;
-        const titulo = document.getElementById('titulo').value || "Pauta Sem Título";
+        const titulo = document.getElementById('titulo').value || "Pauta Geral";
         const resultadoDiv = document.getElementById('resultado');
-        const listaPerguntas = document.getElementById('lista-perguntas');
-        const listaEquipamentos = document.getElementById('lista-equipamentos');
+        
+        const dados = bancoDados[tipo];
         
         document.getElementById('res-titulo').innerText = "Roteiro: " + titulo;
         
-        let perguntas = [];
-        let equipamentos = ["Celular carregado", "Power bank (bateria extra)", "Bloco de notas e caneta"];
-
-        if (tipo === 'jogo') {
-            perguntas = ["Qual a importância deste resultado para a tabela?", "Quem foi o destaque da partida?", "Houve alguma polêmica ou lesão importante?", "Qual a estratégia para o próximo confronto?"];
-            equipamentos.push("Gravador de áudio", "Tripé de mão para celular", "Colete de imprensa");
-        } else if (tipo === 'coletiva') {
-            perguntas = ["Qual o anúncio principal feito hoje?", "Como isso impacta a comunidade/clube?", "Quais os prazos e valores envolvidos?", "Houve espaço para perguntas críticas?"];
-            equipamentos.push("Microfone de lapela", "Lista de autoridades presentes");
-        } else {
-            perguntas = ["Qual o objetivo do evento?", "Quem são as principais autoridades?", "Qual o público estimado?", "Houve algum fato fora do script?"];
-            equipamentos.push("Câmera fotográfica", "Cartão de memória reserva");
-        }
-
-        listaPerguntas.innerHTML = perguntas.map(p => `<li>${p}</li>`).join('');
-        listaEquipamentos.innerHTML = equipamentos.map(e => `<li>${e}</li>`).join('');
+        // Sorteia 4 perguntas do banco de dados para dar variedade
+        const perguntasSorteadas = sortear(dados.perguntas, 4);
+        document.getElementById('lista-perguntas').innerHTML = perguntasSorteadas.map(p => `<li>${p}</li>`).join('');
+        
+        // Sorteia 3 equipamentos específicos + 2 fixos
+        const equipSorteados = sortear(dados.equipamentos, 3);
+        const fixos = ["Smartphone", "Cabo de carregamento"];
+        document.getElementById('lista-equipamentos').innerHTML = [...fixos, ...equipSorteados].map(e => `<li>${e}</li>`).join('');
+        
+        document.getElementById('dica-ia').innerText = dados.dica;
         
         resultadoDiv.style.display = 'block';
+        resultadoDiv.scrollIntoView({behavior: 'smooth'});
     }
 </script>
 
 </body>
+</html>
 </html>
