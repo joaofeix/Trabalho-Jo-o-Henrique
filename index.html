@@ -3,116 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assistente de Pauta e Cobertura Jornalística</title>
+    <title>Assistente de Planejamento Jornalístico</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; color: #1c1e21; padding: 20px; line-height: 1.6; }
-        .container { max-width: 700px; margin: auto; background: #fff; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h1 { color: #1a73e8; text-align: center; font-size: 28px; margin-bottom: 25px; }
-        label { font-weight: 600; display: block; margin-top: 20px; color: #444; }
-        select, input, button { width: 100%; padding: 14px; margin-top: 10px; border-radius: 8px; border: 2px solid #e1e4e8; font-size: 16px; outline: none; box-sizing: border-box; }
-        input:focus, select:focus { border-color: #1a73e8; }
-        button { background-color: #1a73e8; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 30px; transition: all 0.2s ease; }
-        button:hover { background-color: #1557b0; transform: translateY(-2px); }
-        .result-box { margin-top: 30px; padding: 25px; background: #f8f9fa; border-top: 6px solid #1a73e8; border-radius: 8px; display: none; }
-        h3 { margin-top: 0; color: #1a73e8; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-        .section-title { font-weight: bold; color: #2c3e50; margin-top: 15px; display: flex; align-items: center; }
-        .section-title i { margin-right: 10px; }
-        ul { padding-left: 20px; margin-top: 5px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; color: #212529; padding: 20px; line-height: 1.6; }
+        .container { max-width: 700px; margin: auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        h1 { color: #0056b3; text-align: center; font-size: 26px; margin-bottom: 25px; border-bottom: 2px solid #e9ecef; padding-bottom: 15px; }
+        label { font-weight: 600; display: block; margin-top: 20px; color: #495057; }
+        select, input, button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 6px; border: 1px solid #ced4da; font-size: 16px; box-sizing: border-box; }
+        button { background-color: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 25px; transition: background 0.2s; }
+        button:hover { background-color: #0056b3; }
+        .result-box { margin-top: 30px; padding: 20px; background: #f1f3f5; border-left: 6px solid #007bff; border-radius: 4px; display: none; }
+        h3 { margin-top: 0; color: #0056b3; font-size: 20px; }
+        .section-title { font-weight: bold; color: #343a40; margin-top: 15px; text-decoration: underline; }
+        ul { padding-left: 20px; margin-top: 10px; }
         li { margin-bottom: 8px; }
-        .footer { text-align: center; margin-top: 50px; font-size: 13px; color: #777; border-top: 1px solid #eee; padding-top: 20px; }
+        .footer { text-align: center; margin-top: 40px; font-size: 12px; color: #adb5bd; border-top: 1px solid #e9ecef; padding-top: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>📝 Assistente de Pauta IA</h1>
+    <h1>📝 Assistente de Pauta Jornalística</h1>
     
-    <label for="tipoEvento">Selecione a Editoria/Tipo de Cobertura:</label>
+    <label for="tipoEvento">Selecione o Tipo de Cobertura:</label>
     <select id="tipoEvento">
-        <option value="jogo">🏆 Cobertura Esportiva (FME/Grêmio)</option>
-        <option value="coletiva">🎤 Coletiva de Imprensa / Entrevista</option>
-        <option value="evento">🏢 Evento Institucional / Geral</option>
-        <option value="investigativa">🔍 Reportagem de Fôlego / Investigativa</option>
+        <option value="esporte">⚽ Cobertura Esportiva Geral</option>
+        <option value="coletiva">🎤 Coletiva de Imprensa</option>
+        <option value="geral">🏙️ Evento Comunitário / Geral</option>
+        <option value="investigativa">🔍 Reportagem Investigativa</option>
     </select>
 
-    <label for="titulo">Assunto ou Título Provisório:</label>
-    <input type="text" id="titulo" placeholder="Ex: Patinetes em BC ou Jogo do Grêmio">
+    <label for="titulo">Assunto da Matéria:</label>
+    <input type="text" id="titulo" placeholder="Ex: Impacto das Obras no Centro">
 
-    <button onclick="gerarPauta()">Gerar Estrutura de Pauta Dinâmica</button>
+    <button onclick="gerarPauta()">Gerar Roteiro de Apoio</button>
 
     <div id="resultado" class="result-box">
         <h3 id="res-titulo"></h3>
         
-        <div class="section-title">📍 Sugestões de Perguntas (Lide & Detalhes):</div>
+        <div class="section-title">📍 Perguntas para o Lide:</div>
         <ul id="lista-perguntas"></ul>
         
-        <div class="section-title">🎒 Checklist de Equipamentos Recomendado:</div>
+        <div class="section-title">🎒 Checklist de Campo:</div>
         <ul id="lista-equipamentos"></ul>
-        
-        <div class="section-title">💡 Dica da IA para esta Cobertura:</div>
-        <p id="dica-ia" style="font-style: italic; color: #555;"></p>
     </div>
 
     <div class="footer">
-        Desenvolvido por João Henrique | Disciplina de Jornalismo - Univali 2026
+        Atividade Experiência IA - Curso de Jornalismo
     </div>
 </div>
 
 <script>
     const bancoDados = {
-        jogo: {
+        esporte: {
             perguntas: [
-                "Como o estado do gramado/quadra influenciou o desempenho?",
-                "Qual a análise técnica sobre as substituições feitas no 2º tempo?",
-                "Como a torcida está reagindo ao desempenho recente do time?",
-                "Houve algum lance polêmico que mudou o ritmo da partida?",
-                "Qual a projeção matemática para a próxima rodada?",
-                "Quais atletas serão poupados para o próximo compromisso?",
-                "Houve alguma declaração 'quente' na saída de campo?",
-                "Como a parte física pesou nos minutos finais?"
+                "Como a preparação física influenciou no resultado final?",
+                "Quais foram os principais erros táticos observados?",
+                "Qual a importância deste resultado para a sequência da competição?",
+                "Houve algum destaque individual que mudou o rumo do evento?",
+                "Qual a análise sobre as condições climáticas e do local de prova?",
+                "Como a equipe pretende ajustar a estratégia para o próximo desafio?"
             ],
-            equipamentos: ["Gravador", "Tripé de mão", "Colete de imprensa", "Caderno de súmula", "Uniforme da equipe de comunicação"],
-            dica: "Foque nos bastidores. Fotos da torcida e vídeos curtos para Reels costumam engajar mais que apenas o placar."
+            equipamentos: ["Cronômetro", "Gravador de voz", "Tripé flexível", "Bloco de anotações rápido"]
         },
         coletiva: {
             perguntas: [
-                "Quais são os prazos reais para a entrega deste projeto?",
-                "De onde virão os recursos financeiros citados?",
-                "Como essa decisão afeta o cidadão comum de Balneário Camboriú?",
-                "Existem pontos críticos que foram omitidos no anúncio oficial?",
-                "Quem são os parceiros ou empresas envolvidas nesta ação?",
-                "Haverá algum canal de transparência para o acompanhamento público?",
-                "O que motivou essa mudança de postura da instituição agora?",
-                "Qual o plano de contingência caso os prazos não sejam cumpridos?"
+                "Quais são os dados concretos que sustentam esse anúncio?",
+                "Haverá algum impacto direto no orçamento público?",
+                "Qual o cronograma detalhado das próximas etapas?",
+                "Quem serão os responsáveis diretos pela execução deste projeto?",
+                "Como as críticas anteriores foram consideradas nesta nova decisão?",
+                "Existe algum plano de transparência para o acompanhamento dos dados?"
             ],
-            equipamentos: ["Microfone de lapela", "Adaptador P2/P10", "Lista de autoridades", "Identidade funcional (Crachá)"],
-            dica: "Tente fazer a 'pergunta que ninguém quer fazer'. O lide muitas vezes está na resposta mais curta do entrevistado."
+            equipamentos: ["Microfone", "Capa de chuva (se externo)", "Lista de contatos da assessoria", "Cartão de visita"]
         },
-        evento: {
+        geral: {
             perguntas: [
-                "Qual a expectativa de público para este evento?",
-                "Qual o impacto econômico local esperado?",
-                "Houve algum imprevisto na organização?",
-                "Quem são as figuras ilustres presentes?",
-                "Qual a mensagem principal que a organização quer passar?",
-                "Como o evento se diferencia das edições anteriores?",
-                "Haverá impacto no trânsito ou rotina da cidade?",
-                "Qual o momento mais aguardado da programação?"
+                "Qual o objetivo principal desta iniciativa para a comunidade?",
+                "Como os moradores locais estão sendo afetados?",
+                "Existe alguma história individual que personifica esse evento?",
+                "Qual o balanço geral de público e participação?",
+                "Houve algum suporte ou parceria de entidades externas?",
+                "Quais as próximas datas importantes relacionadas a este fato?"
             ],
-            equipamentos: ["Câmera com cartão limpo", "Lente clara (para ambientes fechados)", "Power bank", "Roteiro da cerimônia"],
-            dica: "Capture 'personagens'. Uma aspa de um morador local impactado vale mais que 10 aspas de autoridades."
+            equipamentos: ["Câmera fotográfica", "Carregador portátil", "Documento de identificação", "Canetas reservas"]
         },
         investigativa: {
             perguntas: [
-                "O que dizem os documentos oficiais comparados aos depoimentos?",
-                "Existem padrões de comportamento que se repetem?",
-                "Quem são os maiores beneficiados por esta situação?",
-                "Qual o histórico dos envolvidos nos últimos 5 anos?",
-                "Há contradições entre as falas anteriores e atuais?",
-                "O que os dados estatísticos revelam sobre este problema?"
+                "O que os documentos oficiais revelam sobre as contradições encontradas?",
+                "Quais são as fontes que confirmam o histórico dos envolvidos?",
+                "Existem evidências de benefícios irregulares para grupos específicos?",
+                "Como os dados obtidos divergem das declarações públicas oficiais?",
+                "Há um padrão de irregularidade identificado em períodos anteriores?",
+                "Quais são os riscos identificados para o interesse público nesta situação?"
             ],
-            equipamentos: ["Scanner de mão/app de documentos", "Câmera discreta", "Backup em nuvem imediato", "Contatos de fontes sigilosas"],
-            dica: "Segurança em primeiro lugar. Mantenha sempre alguém da redação ciente da sua localização."
+            equipamentos: ["Cópia de documentos físicos", "Gravador de segurança", "App de digitalização de documentos", "Bateria extra"]
         }
     };
 
@@ -127,24 +112,19 @@
         
         const dados = bancoDados[tipo];
         
-        document.getElementById('res-titulo').innerText = "Roteiro: " + titulo;
+        document.getElementById('res-titulo').innerText = "Plano: " + titulo;
         
-        // Sorteia 4 perguntas do banco de dados para dar variedade
         const perguntasSorteadas = sortear(dados.perguntas, 4);
         document.getElementById('lista-perguntas').innerHTML = perguntasSorteadas.map(p => `<li>${p}</li>`).join('');
         
-        // Sorteia 3 equipamentos específicos + 2 fixos
         const equipSorteados = sortear(dados.equipamentos, 3);
-        const fixos = ["Smartphone", "Cabo de carregamento"];
+        const fixos = ["Celular", "Internet móvel"];
         document.getElementById('lista-equipamentos').innerHTML = [...fixos, ...equipSorteados].map(e => `<li>${e}</li>`).join('');
         
-        document.getElementById('dica-ia').innerText = dados.dica;
-        
         resultadoDiv.style.display = 'block';
-        resultadoDiv.scrollIntoView({behavior: 'smooth'});
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 </script>
 
 </body>
-</html>
 </html>
